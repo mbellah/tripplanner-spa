@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const db = new Sequelize('postgres://localhost:5432/trips', {logging: true});
+const db = new Sequelize('postgres://localhost:5432/tripplanner', {logging: false});
 
 const Place = db.define('place', {
   address: {
@@ -17,7 +17,7 @@ const Place = db.define('place', {
     type: Sequelize.STRING
   },
   location: {
-    type: Sequelize.ARRAY,
+    type: Sequelize.ARRAY(Sequelize.FLOAT),
     allowNull: false,
     validate: {
       notEmpty: true
@@ -27,15 +27,14 @@ const Place = db.define('place', {
 
 const Hotel = db.define('hotel', {
   name: {
-    type: Seqelize.STRING,
+    type: Sequelize.STRING,
     allowNull: false
   },
-  num_starts: {
-    type: Sequelize.ENUM,
-    values: [1, 2, 3, 4, 5]
+  num_stars: {
+    type: Sequelize.INTEGER
   },
   amenities: {
-    type: Sequelize.ARRAY,
+    type: Sequelize.STRING
   }
 });
 
@@ -47,7 +46,7 @@ const Activity = db.define('activity', {
   age_range: {
     type: Sequelize.STRING,
     allowNull: false,
-    defaultValue: 'all ages'
+    defaultValue: 'All'
   }
 });
 
@@ -57,10 +56,21 @@ const Restaurant = db.define('restaurant', {
     allowNull: false
   },
   cuisine: {
-    type: Sequelize.ARRAY,
+    type: Sequelize.STRING
   },
   price: {
-    type: Seqelize.ENUM,
-    values: [1, 2, 3, 4, 5]
+    type: Sequelize.INTEGER
   }
 });
+
+Hotel.belongsTo(Place);
+Restaurant.belongsTo(Place);
+Activity.belongsTo(Place);
+
+
+
+module.exports = {db,
+  Place,
+  Hotel,
+  Restaurant,
+  Activity};
