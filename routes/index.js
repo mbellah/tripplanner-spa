@@ -9,15 +9,15 @@ module.exports = router;
 
 let allAttractions = {};
 
-const hotelPromise = Hotel.findAll({include: [{all: true}]});
-const restaurantPromise = Restaurant.findAll({include: [{all: true}]});
-const activityPromise = Activity.findAll({include: [{all: true}]});
 
 
 router.get('/attractions', (req, res, next) => {
+    const hotelPromise = Hotel.findAll({ include: [{ all: true }] });
+    const restaurantPromise = Restaurant.findAll({ include: [{ all: true }] });
+    const activityPromise = Activity.findAll({ include: [{ all: true }] });
     Promise.all([hotelPromise, activityPromise, restaurantPromise])
-    .then((places) => {
-        res.json(places);
+    .then(([hotels, activities, restaurants]) => {
+        res.json({hotels, activities, restaurants});
     })
     .catch(next);
 });

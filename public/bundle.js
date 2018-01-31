@@ -549,8 +549,23 @@ const map = new mapboxgl.Map({
   style: "mapbox://styles/mapbox/streets-v10" // mapbox has lots of different map styles available.
 });
 
-const marker = buildMarker("activities", fullstackCoords);
+const marker = buildMarker('activities', fullstackCoords);
 marker.addTo(map);
+
+fetch('/api/attractions')
+  .then((result) => {
+    result.json();
+  })
+  .then((attractions) => {
+   attractions.forEach(attraction => {
+      const select = document.createElement('select');
+      let option = document.getElementById(`${attraction}-choices`);
+      option.optionValue = attraction.id
+      option.innerText = attraction.name
+      return select.append(option);
+      })
+    })
+    .catch(console.error)
 
 
 /***/ }),
